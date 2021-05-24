@@ -56,8 +56,6 @@ router.get("/logout", (req, res) => {
 
 // google api route 
 router.get("/googlebooks", (req, res) => {
-
-
     res.render('googlebooks', { pageTitle: "Google Books ", library: [] })
 
 });

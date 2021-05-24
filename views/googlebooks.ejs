@@ -44,8 +44,7 @@
                      $.ajax({
                          type: 'get',
                          url: '/googlebooks/'+search, 
-                         success: function(response){  
-
+                         success: function(response){   
                             if(response.length>0){
                                 
                                 var thum = "";
@@ -59,7 +58,7 @@
                                 var row = 
                                 '<tr> <td scope="row"><img style="width: 115px;" src="'+ thum+'"/></td><td scope="row">'+response[i].volumeInfo.title+'</td><td scope="row">'+response[i].volumeInfo.authors+'</td></tr>';
                                 $('.data').append(row)
-                            }  
+                            }   
                         }else {
                             $('.data').append('<tr><td colspan="3" style="    color: red;    text-align: center;    font-weight: bold;">No Books found</td></td>')
                         }
