@@ -1,0 +1,169 @@
+<%- include('./header')%>
+
+    <div
+        class="justify-content-between
+        flex-wrap flex-md-nowrap
+        align-items-center
+        pt-3
+        pb-2
+        mb-3
+        border-bottom">
+        <h1 class="h2">Genres</h1>
+
+        <button type="button" data-bs-toggle="modal" onclick="viewAddGenre()"
+            data-bs-target="#add_genre_modal" class="btn btn-secondary">Add
+            Genre</button>
+        <!-- Modal -->
+        <div class="modal fade" id="add_genre_modal" tabindex="-1"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add/Edit
+                            Genre</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input type="hidden" class="form-control"
+                                id="id" name="id">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control"
+                                id="name" name="name"
+                                placeholder="Name">
+                        </div>
+
+                        <button id="addgenreBtn" type="submit" class="btn
+                            btn-primary"
+                            onclick="addGenre( )">Add</button>
+                        <button id="updategenreBtn" type="submit" class="btn
+                            btn-primary"
+                            onclick="updateGenre()">Update</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table caption-top">
+                <caption>
+                    List of Genres
+                </caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% genres.forEach(b=> { %>
+                        <tr>
+                            <th scope="row"><%=b.name%></th>
+                                <td>
+                                    <button
+                                        onclick="deleteGenre(<%=b.id%>)"
+                                        class=" del btn
+                                        btn-danger">Delete</button>
+                                </br>
+                            </br>
+                            <button data-bs-toggle="modal"
+                                data-bs-target="#add_genre_modal"
+                                onclick="editGenre(<%=b.id%>)"
+                                class="edit btn
+                                btn-warning">Edit</button></td>
+                    </tr>
+                    <% }) %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <%- include('./footer')%>
+            <script
+                src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script>  
+                    function viewAddGenre(){
+                        $("input[type=text], textarea").val("");
+
+                        $('#addgenreBtn').show()
+                            $('#updategenreBtn').hide()
+                    }
+                        function  editGenre(id){  
+                             
+                            $('#addgenreBtn').hide()
+                            $('#updategenreBtn').show()
+                            $.ajax({
+                                type: 'GET',
+                                url: '/managegenres/'+id,
+                                success: function(response){ 
+                                    $("#id").val(response.id);  
+                                    $("#name").val(response.name);    
+      
+                                },
+                                error: function(err){
+                                    alert(err);
+                                }
+        
+                            });
+                              
+                        }
+                            function  updateGenre(){  
+                                $.ajax({
+                                    type: 'PUT',
+                                    url: '/managegenres/',
+                                    
+                                    data:{
+                                        id:$("#id").val(),
+                                        name: $("#name").val(),  
+                                    },
+                                    success: function(response){
+                                        alert('Updated Successfully');
+                                        window.location = '/managegenres';
+             
+                                    },
+                                    error: function(err){
+                                        alert(err);
+                                    }
+            
+                                });
+                                  
+                            }
+                            function  addGenre(){ 
+                                
+                    $('#addgenreBtn').show()
+                    $('#updategenreBtn').hide() 
+                                $.ajax({
+                                    type: 'POST',
+                                    data:{
+                                        name: $("#name").val(),  
+                                    },
+                                    url: '/managegenres',
+                                    success: function(response){
+                                        alert('Added Successfully');
+                                        window.location = '/managegenres';
+             
+                                    },
+                                    error: function(err){
+                                        alert(err);
+                                    }
+            
+                                });
+                                  
+                            }
+                function  deleteGenre(id){ 
+                    if (confirm("Are you sure ?")){
+                    $.ajax({
+                        type: 'DELETE',
+                        url: '/managegenres/'+id,
+                        success: function(response){
+                            alert('Delete Successfully');
+                            window.location = '/managegenres';
+ 
+                        },
+                        error: function(err){
+                            alert(err);
+                        }
+
+                    });}
+                      
+                } 
+                </script>

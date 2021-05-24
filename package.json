@@ -1,0 +1,41 @@
+{
+  "name": "ohtest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon server.js ",
+    "debug": "nodemon --inspect-brk server.js "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/talanaji/node-api-library.git"
+  },
+  "author": "Tala Alnaji",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/talanaji/node-api-library/issues"
+  },
+  "homepage": "https://github.com/talanaji/node-api-library#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "fastest-validator": "^1.11.0",
+    "jquery": "^3.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.2.5",
+    "nodemon": "^2.0.7",
+    "sequelize": "^6.6.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.27.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.3.0"
+  }
+}

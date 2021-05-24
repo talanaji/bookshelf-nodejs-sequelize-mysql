@@ -1,0 +1,181 @@
+<%- include('./header')%>
+
+    <div
+        class="justify-content-between
+        flex-wrap flex-md-nowrap
+        align-items-center
+        pt-3
+        pb-2
+        mb-3
+        border-bottom">
+        <h1 class="h2">Authors</h1>
+
+        <button type="button" data-bs-toggle="modal" onclick="viewAddAuthor()"
+            data-bs-target="#add_author_modal" class="btn btn-secondary">Add
+            Author</button>
+        <!-- Modal -->
+        <div class="modal fade" id="add_author_modal" tabindex="-1"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add/Edit
+                            Author</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input type="hidden" class="form-control"
+                                id="id" name="id">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control"
+                                id="name" name="name"
+                                placeholder="Name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="biography"
+                                class="form-label">Biography</label>
+                            <textarea class="form-control"
+                                id="biography" name="biography"
+                                rows="3"></textarea>
+                        </div>
+                        <button id="addauthorBtn" type="submit" class="btn
+                            btn-primary"
+                            onclick="addAuthor( )">Add</button>
+                        <button id="updateauthorBtn" type="submit" class="btn
+                            btn-primary"
+                            onclick="updateAuthor()">Update</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table caption-top">
+                <caption>
+                    List of Authors
+                </caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Biography</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% authors.forEach(b=> { %>
+                        <tr>
+                            <th scope="row"><%=b.name%></th>
+                                <td><%=b.biography%></td>
+                                    <td>
+                                        <button
+                                            onclick="deleteAuthor(<%=b.id%>)"
+                                            class=" del btn
+                                            btn-danger">Delete</button>
+                                    </br>
+                                </br>
+                                <button data-bs-toggle="modal"
+                                    data-bs-target="#add_author_modal"
+                                    onclick="editAuthor(<%=b.id%>)"
+                                    class="edit btn
+                                    btn-warning">Edit</button></td>
+                        </tr>
+                        <% }) %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <%- include('./footer')%>
+                <script
+                    src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>  
+                    function viewAddAuthor(){
+                        $("input[type=text], textarea").val("");
+
+                        $('#addauthorBtn').show()
+                            $('#updateauthorBtn').hide()
+                    }
+                        function  editAuthor(id){  
+                             
+                            $('#addauthorBtn').hide()
+                            $('#updateauthorBtn').show()
+                            $.ajax({
+                                type: 'GET',
+                                url: '/manageauthors/'+id,
+                                success: function(response){ 
+                                    $("#id").val(response.id);  
+                                    $("#name").val(response.name);   
+                                    $("#biography").val(response.biography);  
+      
+                                },
+                                error: function(err){
+                                    alert(err);
+                                }
+        
+                            });
+                              
+                        }
+                            function  updateAuthor(){  
+                                $.ajax({
+                                    type: 'PUT',
+                                    url: '/manageauthors/',
+                                    
+                                    data:{
+                                        id:$("#id").val(),
+                                        name: $("#name").val(), 
+                                        biography:$("#biography").val()
+                                    },
+                                    success: function(response){
+                                        alert('Updated Successfully');
+                                        window.location = '/manageauthors';
+             
+                                    },
+                                    error: function(err){
+                                        alert(err);
+                                    }
+            
+                                });
+                                  
+                            }
+                            function  addAuthor(){ 
+                                
+                    $('#addauthorBtn').show()
+                    $('#updateauthorBtn').hide() 
+                                $.ajax({
+                                    type: 'POST',
+                                    data:{
+                                        name: $("#name").val(), 
+                                        biography:$("#biography").val()
+                                    },
+                                    url: '/manageauthors',
+                                    success: function(response){
+                                        alert('Added Successfully');
+                                        window.location = '/manageauthors';
+             
+                                    },
+                                    error: function(err){
+                                        alert(err);
+                                    }
+            
+                                });
+                                  
+                            }
+                function  deleteAuthor(id){ 
+                    if (confirm("Are you sure ?")){
+                    $.ajax({
+                        type: 'DELETE',
+                        url: '/manageauthors/'+id,
+                        success: function(response){
+                            alert('Delete Successfully');
+                            window.location = '/manageauthors';
+ 
+                        },
+                        error: function(err){
+                            alert(err);
+                        }
+
+                    });}
+                      
+                } 
+                </script>

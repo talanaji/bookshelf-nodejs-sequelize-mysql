@@ -1,0 +1,190 @@
+<%- include('./header')%>
+
+    <div
+        class="justify-content-between
+        flex-wrap flex-md-nowrap
+        align-items-center
+        pt-3
+        pb-2
+        mb-3
+        border-bottom">
+        <h1 class="h2">Books</h1>
+
+        <button type="button" data-bs-toggle="modal" onclick="viewAddBook()"
+            data-bs-target="#add_book_modal" class="btn btn-secondary">Add Book</button>
+        <!-- Modal -->
+        <div class="modal fade" id="add_book_modal" tabindex="-1"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add/Edit
+                            Book</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <input type="hidden" class="form-control"
+                                id="id" name="id">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control"
+                                id="title" name="title"
+                                placeholder="Title">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control"
+                                id="isbn" name="isbn"
+                                placeholder="ISBN">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description"
+                                class="form-label">Description</label>
+                            <textarea class="form-control"
+                                id="description" name="description"
+                                rows="3"></textarea>
+                        </div>
+                        <button id="addbookBtn" type="submit" class="btn
+                            btn-primary"
+                            onclick="addBook( )">Add</button>
+                        <button id="updatebookBtn" type="submit" class="btn
+                            btn-primary"
+                            onclick="updateBook()">Update</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table caption-top">
+                <caption>
+                    List of Books
+                </caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">ISBN</th>
+                        <th scope="col">Description</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% books.forEach(b=> { %>
+                        <tr>
+                            <th scope="row"><%=b.title%></th>
+                                <td><%=b.isbn%></td>
+                                    <td><%=b.description%></td>
+                                        <td>
+                                            <button
+                                                onclick="deleteBook(<%=b.id%>)"
+                                                class=" del btn
+                                                btn-danger">Delete</button>
+                                        </br>
+                                    </br>
+                                    <button data-bs-toggle="modal"
+                                        data-bs-target="#add_book_modal"
+                                        onclick="editBook(<%=b.id%>)"
+                                        class="edit btn
+                                        btn-warning">Edit</button></td>
+                            </tr>
+                            <% }) %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <%- include('./footer')%>
+                    <script
+                        src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                    <script>  
+                    function viewAddBook(){
+                        $("input[type=text], textarea").val("");
+
+                        $('#addbookBtn').show()
+                            $('#updatebookBtn').hide()
+                    }
+                        function  editBook(id){  
+                             
+                            $('#addbookBtn').hide()
+                            $('#updatebookBtn').show()
+                            $.ajax({
+                                type: 'GET',
+                                url: '/managebooks/'+id,
+                                success: function(response){
+                                    $("#id").val(response.id);  
+                                    $("#title").val(response.title);  
+                                    $("#isbn").val(response.isbn);  
+                                    $("#description").val(response.description);  
+      
+                                },
+                                error: function(err){
+                                    alert(err);
+                                }
+        
+                            });
+                              
+                        }
+                            function  updateBook(){  
+                                $.ajax({
+                                    type: 'PUT',
+                                    url: '/managebooks/',
+                                    
+                                    data:{
+                                        id:$("#id").val(),
+                                        title: $("#title").val(),
+                                        isbn:$("#isbn").val(),
+                                        description:$("#description").val()
+                                    },
+                                    success: function(response){
+                                        alert('Updated Successfully');
+                                        window.location = '/managebooks';
+             
+                                    },
+                                    error: function(err){
+                                        alert(err);
+                                    }
+            
+                                });
+                                  
+                            }
+                            function  addBook(){ 
+                                
+                    $('#addbookBtn').show()
+                    $('#updatebookBtn').hide() 
+                                $.ajax({
+                                    type: 'POST',
+                                    data:{
+                                        title: $("#title").val(),
+                                        isbn:$("#isbn").val(),
+                                        description:$("#description").val()
+                                    },
+                                    url: '/managebooks',
+                                    success: function(response){
+                                        alert('Added Successfully');
+                                        window.location = '/managebooks';
+             
+                                    },
+                                    error: function(err){
+                                        alert(err);
+                                    }
+            
+                                });
+                                  
+                            }
+                function  deleteBook(id){ 
+                    if (confirm("Are you sure ?")){
+                    $.ajax({
+                        type: 'DELETE',
+                        url: '/managebooks/'+id,
+                        success: function(response){
+                            alert('Delete Successfully');
+                            window.location = '/managebooks';
+ 
+                        },
+                        error: function(err){
+                            alert(err);
+                        }
+
+                    });}
+                      
+                } 
+                </script>
