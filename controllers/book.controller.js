@@ -1,4 +1,5 @@
 const Validator = require('fastest-validator')
+const request = require('request');
 const models = require('../models')
 
 function index(req, res) {
@@ -37,6 +38,16 @@ function show(req, res) {
             error
         })
     });
+}
+function googleBooks(req, res) {
+    const { search } = req.params;
+    request(`https://www.googleapis.com/books/v1/volumes?q=${req.params.search}&key=AIzaSyBHvwwcQo_CYkfztZLauSaDEDhOhm153LM`, (error, response, body) => {
+        const library = JSON.parse(body)
+
+        if (library.length !== 0)
+            res.status(200).json(library.items)
+
+    })
 }
 
 
@@ -128,6 +139,6 @@ function destroy(req, res) {
 module.exports = {
     index,
     save, show,
-    update,
+    update, googleBooks,
     destroy,
 }

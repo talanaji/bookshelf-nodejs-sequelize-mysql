@@ -55,6 +55,14 @@ Create, edit and delete books.
 Create, edit and delete authors.
 Create, edit and delete genres.
 
+<hr/>
+
+Also the application allow you to search for book using Google Books Api 
+check below link after login 
+
+http://localhost:4000/googlebooks
+
+
 
 
 

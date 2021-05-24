@@ -1,10 +1,10 @@
 const express = require('express')
+
 const checkAuthMiddleware = require("../middleware/checkAuth")
 const usersController = require("../controllers/user.controller")
 const booksController = require("../controllers/book.controller")
 const authorsController = require("../controllers/author.controller")
 const genresController = require("../controllers/genre.controller")
-const { route } = require('./books')
 
 const router = express.Router();
 router.get("/", checkAuthMiddleware.checkAuth, (req, res) => {
@@ -53,5 +53,16 @@ router.get("/logout", (req, res) => {
     res.redirect('/login')
 
 })
+
+// google api route 
+router.get("/googlebooks", (req, res) => {
+
+
+    res.render('googlebooks', { pageTitle: "Google Books ", library: [] })
+
+});
+
+// google api route 
+router.get("/googlebooks/:search", booksController.googleBooks)
 
 module.exports = router

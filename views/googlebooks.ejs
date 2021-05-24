@@ -1,0 +1,74 @@
+
+<%- include('./header')%>
+
+    <div class="justify-content-between flex-wrap flex-md-nowrap
+        align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Google Books</h1>
+        <div id="content">
+
+            <div class="mb-3">
+                <input type="text" class="form-control"
+                    id="title" name="title"
+                    placeholder="Enter name of book or author">
+            </div>
+            <button id="bookBtn" type="submit" class="btn
+                btn-primary"
+                onclick="searchBook( )">Search</button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table caption-top">
+                <thead>
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Author</th>
+                    </tr>
+                </thead>
+                <tbody class="data">
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <%- include('./footer')%><script
+            src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+    
+    function  searchBook(){  
+                      
+        var search = $("#title").val();
+        
+        $(".data").empty();
+                     $.ajax({
+                         type: 'get',
+                         url: '/googlebooks/'+search, 
+                         success: function(response){  
+
+                            if(response.length>0){
+                                
+                                var thum = "";
+                                for (i = 0; i < response.length; i++) {
+                                 var thum = "";
+                                 if((response[i].volumeInfo.imageLinks ==null)|| response[i].volumeInfo.imageLinks==''){
+                                    thum='thumb.jpg';
+                                }else {
+                                    thum=response[1].volumeInfo.imageLinks.thumbnail;
+                                } 
+                                var row = 
+                                '<tr> <td scope="row"><img style="width: 115px;" src="'+ thum+'"/></td><td scope="row">'+response[i].volumeInfo.title+'</td><td scope="row">'+response[i].volumeInfo.authors+'</td></tr>';
+                                $('.data').append(row)
+                            }  
+                        }else {
+                            $('.data').append('<tr><td colspan="3" style="    color: red;    text-align: center;    font-weight: bold;">No Books found</td></td>')
+                        }
+                         },
+                         error: function(err){
+                            $('.data').append('<tr><td colspan="3" style="    color: red;    text-align: center;    font-weight: bold;">No Books found</td></td>')
+                         }
+ 
+                     });
+                       
+                 } 
+</script>
